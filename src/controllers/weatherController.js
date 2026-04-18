@@ -10,11 +10,12 @@ const getCurrentWeather = async (req, res) => {
     const { city } = req.params;
 
     const response = await axios.get(
-      `https://open-weather13.p.rapidapi.com/city/${city}/EN`,
+      `https://open-weather13.p.rapidapi.com/city?city=${city}&lang=EN`,
       {
         headers: {
           'x-rapidapi-key': RAPIDAPI_KEY,
           'x-rapidapi-host': RAPIDAPI_HOST,
+          'Content-Type': 'application/json'
         },
       }
     );
@@ -58,6 +59,7 @@ const getForecast = async (req, res) => {
         headers: {
           'x-rapidapi-key': RAPIDAPI_KEY,
           'x-rapidapi-host': RAPIDAPI_HOST,
+          'Content-Type': 'application/json'
         },
       }
     );
