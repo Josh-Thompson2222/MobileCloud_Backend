@@ -3,6 +3,8 @@ const axios = require('axios');
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 const RAPIDAPI_HOST = 'open-weather13.p.rapidapi.com';
 
+const toCelsius = (f) => Math.round((f - 32) * (5 / 9));
+
 // @desc    Get current weather by city name
 // @route   GET /api/weather/current/:city
 const getCurrentWeather = async (req, res) => {
@@ -26,10 +28,10 @@ const getCurrentWeather = async (req, res) => {
     const weather = {
       city: data.name,
       country: data.sys.country,
-      temp: Math.round(data.main.temp),
-      feels_like: Math.round(data.main.feels_like),
-      temp_min: Math.round(data.main.temp_min),
-      temp_max: Math.round(data.main.temp_max),
+      temp: toCelsius(data.main.temp),
+      feels_like: toCelsius(data.main.feels_like),
+      temp_min: toCelsius(data.main.temp_min),
+      temp_max: toCelsius(data.main.temp_max),
       humidity: data.main.humidity,
       description: data.weather[0].description,
       icon: data.weather[0].icon,
@@ -87,7 +89,7 @@ const getForecast = async (req, res) => {
       if (!grouped[date]) grouped[date] = [];
       grouped[date].push({
         time: item.dt_txt.split(' ')[1],
-        temp: Math.round(item.main.temp),
+        temp: toCelsius(item.main.temp),
         description: item.weather[0].description,
         icon: item.weather[0].icon,
         humidity: item.main.humidity,
