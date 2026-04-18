@@ -10,7 +10,7 @@ const getCurrentWeather = async (req, res) => {
     const { city } = req.params;
 
     const response = await axios.get(
-      `https://open-weather13.p.rapidapi.com/city?city=${city}&lang=EN`,
+      `https://open-weather13.p.rapidapi.com/city?city=${city}&lang=EN&units=metric`,
       {
         headers: {
           'x-rapidapi-key': RAPIDAPI_KEY,
@@ -53,8 +53,23 @@ const getForecast = async (req, res) => {
   try {
     const { city } = req.params;
 
+    // First get coordinates from current weather
+    const weatherResponse = await axios.get(
+      `https://open-weather13.p.rapidapi.com/city?city=${city}&lang=EN&units=metric`,
+      {
+        headers: {
+          'x-rapidapi-key': RAPIDAPI_KEY,
+          'x-rapidapi-host': RAPIDAPI_HOST,
+          'Content-Type': 'application/json'
+        },
+      }
+    );
+
+    const { coord } = weatherResponse.data;
+
+    // Then get forecast using coordinates
     const response = await axios.get(
-      `https://open-weather13.p.rapidapi.com/city/fivedaysforcast/${city}`,
+      `https://open-weather13.p.rapidapi.com/fivedaysforcast?latitude=${coord.lat}&longitude=${coord.lon}&lang=EN&units=metric`,
       {
         headers: {
           'x-rapidapi-key': RAPIDAPI_KEY,
@@ -66,7 +81,6 @@ const getForecast = async (req, res) => {
 
     const data = response.data;
 
-    // Group forecast by day
     const grouped = {};
     data.list.forEach((item) => {
       const date = item.dt_txt.split(' ')[0];
