@@ -4,6 +4,7 @@ const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 const RAPIDAPI_HOST = 'open-weather13.p.rapidapi.com';
 
 const toCelsius = (f) => Math.round((f - 32) * (5 / 9));
+const kelvinToCelsius = (k) => Math.round(k - 273.15);
 
 // @desc    Get current weather by city name
 // @route   GET /api/weather/current/:city
@@ -89,7 +90,7 @@ const getForecast = async (req, res) => {
       if (!grouped[date]) grouped[date] = [];
       grouped[date].push({
         time: item.dt_txt.split(' ')[1],
-        temp: toCelsius(item.main.temp),
+        temp: kelvinToCelsius(item.main.temp),
         description: item.weather[0].description,
         icon: item.weather[0].icon,
         humidity: item.main.humidity,
